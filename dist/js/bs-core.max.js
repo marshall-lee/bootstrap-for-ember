@@ -1,6 +1,6 @@
 /* ========================================================================
- * Bootstrap: transition.js v3.0.0
- * http://twbs.github.com/bootstrap/javascript.html#transitions
+ * Bootstrap: transition.js v3.0.2
+ * http://getbootstrap.com/javascript/#transitions
  * ========================================================================
  * Copyright 2013 Twitter, Inc.
  *
@@ -53,7 +53,7 @@
     $.support.transition = transitionEnd()
   })
 
-}(window.jQuery);
+}(jQuery);
 
 (function() {
   var Bootstrap;
@@ -171,7 +171,7 @@
     extraSmallSizeClass: (function() {
       var pref;
       pref = this.get('classTypePrefix');
-      if (this.sx) {
+      if (this.xs) {
         return "" + pref + "-xs";
       } else {
         return null;
@@ -245,6 +245,24 @@ An extra 'active' css class will be assigned to the Item (this) if this is a sel
 (function() {
   Bootstrap.ItemSelection = Ember.Mixin.create(Bootstrap.ItemValue, Bootstrap.WithRouter, {
     classNameBindings: ["isActive:active"],
+    init: function() {
+      this._super();
+      return this.didRouteChange();
+    },
+    didRouteChange: (function() {
+      var itemsView, linkTo, _ref;
+      linkTo = this.get('content.linkTo');
+      if (linkTo == null) {
+        return;
+      }
+      itemsView = this.get('parentView');
+      if (itemsView == null) {
+        return;
+      }
+      if ((_ref = this.get('router')) != null ? _ref.isActive(linkTo) : void 0) {
+        return itemsView.set('selected', this.get('value'));
+      }
+    }).observes('router.url'),
     /*
     Determine whether the current item is selected,
     if true the 'active' css class will be associated with the this DOM's element.
@@ -254,12 +272,7 @@ An extra 'active' css class will be assigned to the Item (this) if this is a sel
     */
 
     isActive: (function() {
-      var itemsView, selected, value, _ref;
-      if (this.get('content.linkTo')) {
-        if (this.get('content.linkTo') && ((_ref = this.get('router')) != null ? _ref.isActive(this.get('content.linkTo')) : void 0)) {
-          return true;
-        }
-      }
+      var itemsView, selected, value;
       itemsView = this.get('parentView');
       if (itemsView == null) {
         return false;
@@ -289,6 +302,9 @@ An extra 'active' css class will be assigned to the Item (this) if this is a sel
         if (content.get('disabled')) {
           return;
         }
+      }
+      if (this.get('content.linkTo') != null) {
+        return;
       }
       return itemsView.set('selected', this.get('value'));
     }

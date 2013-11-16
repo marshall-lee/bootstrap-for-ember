@@ -72,13 +72,6 @@ Originally written by Aaron Haurwitz (http://aaron.haurwitz.com/), licensed unde
       willDestroyElement: function() {
         return $(window).unbind('resize', this.get('_recomputeStyle'));
       },
-      close: function() {
-        this.set('isOpaque', false);
-        return setTimeout((function() {
-          this.set("content.closed", true);
-          return clearTimeout(this.get("timeoutId"));
-        }).bind(this), 300);
-      },
       style: (function() {
         var column, index, notifications, rightPx, row, topPx, unitHeight, unitWidth, unitsPerColumn, viewportHeight;
         notifications = this.get('parentView.content').rejectProperty('closed', true);
@@ -110,7 +103,16 @@ Originally written by Aaron Haurwitz (http://aaron.haurwitz.com/), licensed unde
           'danger': 'glyphicon-remove'
         };
         return hash[type] || '';
-      }).property('content.type')
+      }).property('content.type'),
+      actions: {
+        close: function() {
+          this.set('isOpaque', false);
+          return setTimeout((function() {
+            this.set("content.closed", true);
+            return clearTimeout(this.get("timeoutId"));
+          }).bind(this), 300);
+        }
+      }
     })
   });
 
