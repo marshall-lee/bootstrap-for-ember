@@ -134,7 +134,8 @@ Modal component.
         name: name,
         title: title,
         manual: true,
-        footerButtons: footerButtons
+        footerButtons: footerButtons,
+        targetObject: controller
       });
       if (Ember.typeOf(view) === 'string') {
         template = controller.container.lookup("template:" + view);
@@ -153,7 +154,7 @@ Modal component.
           controller: controller
         });
       }
-      return modalComponent.appendTo('body');
+      return modalComponent.appendTo(controller.namespace.rootElement);
     }
   });
 
